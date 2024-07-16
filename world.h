@@ -1,6 +1,6 @@
 #include <entity.h>
 
-class Item: public Entity
+class World
 {public:
 
 };
