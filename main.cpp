@@ -20,7 +20,7 @@ int main(){
         }else if( a == 'N'){
             cprintf( "Welcome to the North \n");
         }else if ( a == 'E'){
-            world.World()
+            world.create();
             cprintf( "Welcome to the East \n");
         } else{
             cprintf( "Welcome to the West \n");

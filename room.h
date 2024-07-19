@@ -3,6 +3,8 @@
 class Room: public Entity
 {public:
 
+
+    Room(const char* name, const char* description);
     //private static int numRooms = 0;
 
     /*void numRooms(numRooms){
@@ -13,4 +15,8 @@ class Room: public Entity
             return null;
         }
     }*/
+
+private:
+    std::string name;
+    std::string description;
 };
