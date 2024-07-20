@@ -1,3 +1,7 @@
+
+#ifndef ROOM_H
+#define ROOM_H
+
 #include "entity.h"
 
 class Room: public Entity
@@ -5,6 +9,9 @@ class Room: public Entity
 
 
     Room(const char* name, const char* description);
+
+    std::string getName() const; 
+
     //private static int numRooms = 0;
 
     /*void numRooms(numRooms){
@@ -15,8 +22,11 @@ class Room: public Entity
             return null;
         }
     }*/
+   
 
 private:
     std::string name;
     std::string description;
 };
+
+#endif
