@@ -7,3 +7,7 @@ Exit::Exit(const Room& origin, const Room& destination) : source(origin), destin
     std::cout << "- Origin: " << origin.getName() << std::endl;
     std::cout << "- Destination: " << destination.getName() << std::endl;
 }
+
+const Room& Exit::getDestination() const{
+    return destination;
+}

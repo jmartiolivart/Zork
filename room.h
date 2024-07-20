@@ -2,8 +2,10 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include<vector>
 #include "entity.h"
 
+class Exit; // Forward declaration of Exit
 class Room: public Entity
 {public:
 
@@ -11,6 +13,9 @@ class Room: public Entity
     Room(const char* name, const char* description);
 
     std::string getName() const; 
+    std::string getDescription() const;
+    void addExit(Exit* exit);   // Add an exit to the room
+    std::vector<Exit*> getExits() const; // Get all exits from the room
 
     //private static int numRooms = 0;
 
@@ -27,6 +32,7 @@ class Room: public Entity
 private:
     std::string name;
     std::string description;
+    std::vector<Exit*> exits; // Store exits within the room
 };
 
 #endif

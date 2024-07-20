@@ -4,15 +4,17 @@
 #include "room.h"
 #include "entity.h"
 
+class Room; // Forward declaration of Room
 class Exit : public Entity {
 
 public:
     Exit(); // Default constructor declaration
     Exit(const Room& origin, const Room& destination);
+    const Room& getDestination() const;
+    Room* getDestinationPtr() const; 
 
 private:
-    enum direction {north, south, west, east};
-    Room source;
-    Room destination;
+    const Room& source;
+    const Room& destination; // Store the destination as a reference
 };
 #endif
