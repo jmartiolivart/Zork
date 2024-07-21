@@ -83,8 +83,10 @@ void World::create(){
             player.showInventory(); 
         }else if(userInput == "take"){
             player.getItem(*currentRoom);
+        }else if(userInput == "help"){
+            help();
         }else{
-            cprintf("I can't detect that command. Possible commands: look, move, exit, quit");
+            cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
     }
     
@@ -120,4 +122,13 @@ void World::move() {
         }
     }
     cprintf("You can't go that way.\n");
+}
+
+void World::help(){
+    cprintf("This are the commands availables:\n");
+    cprintf("- look : it tells in which location are and a brief description\n");
+    cprintf("- move : it lets you choose between two locations that you can travel\n");
+    cprintf("- exit or quit : it will end the game\n");
+    cprintf("- inventory : you can poke in your bag to see what you are carrying\n");
+    cprintf("- take: take it takes the object of the room you are located\n");
 }

@@ -7,6 +7,7 @@ class World
     void create();
     void look();
     void move();
+    void help();
 
 private:
 
