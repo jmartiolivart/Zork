@@ -7,30 +7,32 @@
 #include "world.h"   
 #include "room.h"    
 #include "item.h"    
-#include "exit.h"    
+#include "exit.h"
+#include "player.h"    
 
 using namespace std;
 
 void World::create(){
-
-    //Creation of rooms
-    std::vector<std::unique_ptr<Room>> rooms;
-    rooms.push_back(std::make_unique<Room>("Old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper"));
-    // The ocre ball is and old and mosty sword, the paper tells something about how to kill the ogre
-    rooms.push_back(std::make_unique<Room>("Mossy forest", "A big mystic forest with different trees it seems that there's a sound comming between the two trees of the left, also there's a rod in the ground in front of you"));
-    //The rod to fish in the lake and extract the key of the castle
-    rooms.push_back(std::make_unique<Room>("The wasteland", "In other times the so called wastelands had a very busy well-built road that went throught the forest and lead into the castle, now is an abandoned and vast route only used for outcasts and by bandits who want to avoid the lonely cabin"));
-    //Starting point of the adventure!                   
-    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the castle before the war ended devastating all the region"));
-    //¿?
-    rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door"));
-    //To kill the ogre take sword of castle / When winning the orgre treasure box appear the end
 
     //Creation of Items
     Item* sword = new Item("Sword");
     Item* fishingRod = new Item("Fishing Rod");
     Item* key = new Item("Rusty key");
     Item* treasure = new Item("Treasure chest");
+
+
+    //Creation of rooms
+    std::vector<std::unique_ptr<Room>> rooms;
+    rooms.push_back(std::make_unique<Room>("Old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper", sword));
+    // The ocre ball is and old and mosty sword, the paper tells something about how to kill the ogre
+    rooms.push_back(std::make_unique<Room>("Mossy forest", "A big mystic forest with different trees it seems that there's a sound comming between the two trees of the left, also there's a rod in the ground in front of you", fishingRod));
+    //The rod to fish in the lake and extract the key of the castle
+    rooms.push_back(std::make_unique<Room>("The wasteland", "In other times the so called wastelands had a very busy well-built road that went throught the forest and lead into the castle, now is an abandoned and vast route only used for outcasts and by bandits who want to avoid the lonely cabin"));
+    //Starting point of the adventure!                   
+    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the castle before the war ended devastating all the region", key));
+    //¿?
+    rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door", treasure));
+    //To kill the ogre take sword of castle / When winning the orgre treasure box appear the end
 
     //Creation of paths:
     // 0 -> OLD CASTLE
@@ -48,6 +50,10 @@ void World::create(){
     rooms[3]->addExit(new Exit(*rooms[3].get(), *rooms[4].get())); // Shinning lake to Lonely hut
     rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[3].get())); // Lonely hut to Shining lake
     rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[0].get())); // Lonely hut to Old castle
+
+    vector<Item*> startingItems;
+    startingItems.push_back(new Item("Note"));
+    Player player(startingItems);
 
     cprintf("\n \n \n \n");
 
@@ -73,6 +79,10 @@ void World::create(){
             move(); // Call move() on the World object (no argument needed)
         }else if(userInput == "exit" || userInput == "quit"){
             break; //Exit the game
+        }else if(userInput == "inventory"){
+            player.showInventory(); 
+        }else if(userInput == "take"){
+            player.getItem(*currentRoom);
         }else{
             cprintf("I can't detect that command. Possible commands: look, move, exit, quit");
         }

@@ -1,38 +1,30 @@
-
 #ifndef ROOM_H
 #define ROOM_H
 
-#include<vector>
+#include <vector>
+#include <string>
 #include "entity.h"
+#include "item.h" // Add this line to include the Item class definition
 
 class Exit; // Forward declaration of Exit
+
 class Room: public Entity
-{public:
-
-
-    Room(const char* name, const char* description);
+{
+public:
+    Room(const char* name, const char* description, Item* item = nullptr);
 
     std::string getName() const; 
     std::string getDescription() const;
     void addExit(Exit* exit);   // Add an exit to the room
     std::vector<Exit*> getExits() const; // Get all exits from the room
-
-    //private static int numRooms = 0;
-
-    /*void numRooms(numRooms){
-        if(numRooms >= 3 && numRooms <= 8){
-            numRooms++;
-        }else{
-            //ERROR: Need more or less Rooms
-            return null;
-        }
-    }*/
-   
+    Item* getItem() const;
+    void removeItem();
 
 private:
     std::string name;
     std::string description;
     std::vector<Exit*> exits; // Store exits within the room
+    Item* item;
 };
 
 #endif

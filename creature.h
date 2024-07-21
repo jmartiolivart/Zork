@@ -2,6 +2,7 @@
 
 class Creature: public Entity
 {public:
+//Ogre
 
 
 };
