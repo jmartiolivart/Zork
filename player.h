@@ -11,8 +11,8 @@ public:
 
     Player(std::vector<Item *> items);
 
-    void getItem(Room room);
-    void dropItem(std::string itemDrop, Room& room);
+    void getItem(Room *room);
+    void dropItem(const std::string& itemName, Room& room);
     void showInventory();
 
 private:

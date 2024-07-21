@@ -33,11 +33,13 @@ void Room::removeItem() {
     item = nullptr;
 }
 
-void Room::addItem(Item* newItem){
+bool Room::addItem(Item* newItem){
     if (item == nullptr) { // Check if there's already an item in the room
         item = newItem; 
         std::cout << newItem->getName() << " has been added to " << name << std::endl;
+        return true;
     } else {
         std::cout << "There's already an item in this room.\n";
+        return false;
     }
 }

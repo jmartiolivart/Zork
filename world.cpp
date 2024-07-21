@@ -82,11 +82,11 @@ void World::create(){
         }else if(userInput == "inventory"){
             player.showInventory(); 
         }else if(userInput == "take"){
-            player.getItem(*currentRoom);
+            player.getItem(currentRoom);
         }else if(userInput == "help"){
             help();
         }else if(userInput == "drop") {
-            cprintf("Which item do you want to drop?");
+            cprintf("Which item do you want to drop?\n");
             player.showInventory(); 
             drop(player);
         }else{
