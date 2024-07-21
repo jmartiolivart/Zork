@@ -5,6 +5,10 @@ class World
 {public:
 
     void create();
-    void look(const Room* room);
-     void move(const Room* currentRoom);
+    void look();
+    void move();
+
+private:
+
+    Room* currentRoom; // Store the current room pointer as a member variable
 };

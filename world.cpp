@@ -38,23 +38,23 @@ void World::create(){
     // 2 -> THE WASTELANDS
     // 3 -> SHINNING LAKE
     // 4 -> LONELY HUT
-    rooms[0]->addExit(new Exit(rooms[0].get(), rooms[1].get())); // Old castle to Mossy forest
-    rooms[0]->addExit(new Exit(rooms[0].get(), rooms[4].get())); // Old castle to Lonely hut
-    rooms[1]->addExit(new Exit(rooms[1].get(), rooms[0].get())); // 
-    rooms[1]->addExit(new Exit(rooms[1].get(), rooms[2].get())); // 
-    rooms[2]->addExit(new Exit(rooms[2].get(), rooms[1].get())); // 
-    rooms[2]->addExit(new Exit(rooms[2].get(), rooms[3].get())); // 
-    rooms[3]->addExit(new Exit(rooms[3].get(), rooms[2].get())); //
-    rooms[3]->addExit(new Exit(rooms[3].get(), rooms[4].get())); // 
-    rooms[4]->addExit(new Exit(rooms[4].get(), rooms[3].get())); //
-    rooms[4]->addExit(new Exit(rooms[4].get(), rooms[0].get())); //
+    rooms[0]->addExit(new Exit(*rooms[0].get(), *rooms[1].get())); // Old castle to Mossy forest
+    rooms[0]->addExit(new Exit(*rooms[0].get(), *rooms[4].get())); // Old castle to Lonely hut
+    rooms[1]->addExit(new Exit(*rooms[1].get(), *rooms[0].get())); // Mossy forest to Old castle
+    rooms[1]->addExit(new Exit(*rooms[1].get(), *rooms[2].get())); // Mossy forest to The wastelands
+    rooms[2]->addExit(new Exit(*rooms[2].get(), *rooms[1].get())); // The wastelands to Mossy Forest
+    rooms[2]->addExit(new Exit(*rooms[2].get(), *rooms[3].get())); // The wastelands to Shining lake
+    rooms[3]->addExit(new Exit(*rooms[3].get(), *rooms[2].get())); // Shining lake to The wastelands
+    rooms[3]->addExit(new Exit(*rooms[3].get(), *rooms[4].get())); // Shinning lake to Lonely hut
+    rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[3].get())); // Lonely hut to Shining lake
+    rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[0].get())); // Lonely hut to Old castle
 
     cprintf("\n \n \n \n");
 
     // The game starts
-    Room* currentRoom = rooms[2].get(); // Starting in the wasteland
+    currentRoom = rooms[2].get(); // Starting in the wasteland
 
-    look(currentRoom);
+    look();
 
     //User commands
     std::string userInput;
@@ -68,12 +68,13 @@ void World::create(){
         }
 
         if (userInput == "look") {
-            look(currentRoom);
-        }else if(userInput == "move"){
-            move(currentRoom);
-            break;
+            look();
+        } else if(userInput == "move"){
+            move(); // Call move() on the World object (no argument needed)
+        }else if(userInput == "exit" || userInput == "quit"){
+            break; //Exit the game
         }else{
-            cprintf("Not valid \n");
+            cprintf("I can't detect that command. Possible commands: look, move, exit, quit");
         }
     }
     
@@ -81,14 +82,14 @@ void World::create(){
 
 }
 
-void World::look(const Room* room) {
-    string currentLocation = room->getName(); // Use -> for pointer access
-    string currentDescription = room->getDescription(); // Use -> for pointer access
+void World::look() {
+    string currentLocation = currentRoom->getName(); // Use -> for pointer access
+    string currentDescription = currentRoom->getDescription(); // Use -> for pointer access
     cprintf("\033[1mCurrent Location: %s\033[0m \n%s\n", currentLocation.c_str(), currentDescription.c_str());
 }
 
 
-void World::move(const Room* currentRoom) {
+void World::move() {
     cprintf("Possible routes:\n");
     for (Exit* exit : currentRoom->getExits()) {
         const Room& route = exit->getDestination();
@@ -99,14 +100,12 @@ void World::move(const Room* currentRoom) {
     cprintf("Where do you want to move? ");
     std::getline(std::cin, destinationName);
 
-    for (char &c : destinationName) {
-        c = std::tolower(c);
-    }
+    cprintf("%s", destinationName.c_str());
 
     for (Exit* exit : currentRoom->getExits()) {
         if (destinationName == exit->getDestination().getName()) {
-            currentRoom = exit->getDestinationPtr(); // Use getDestinationPtr()
-            look(currentRoom);
+            currentRoom = const_cast<Room*>(&exit->getDestination()); // Remove constness and update the pointer
+            look();
             return;
         }
     }
