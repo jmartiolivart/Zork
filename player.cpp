@@ -1,4 +1,5 @@
 #include "player.h"
+#include "item.h"
 #include <conio.h>
 
 Player::Player(std::vector<Item*> items):items(items){
@@ -17,8 +18,19 @@ void Player::getItem(Room room){
     }
 }
 
-void Player::dropItem(Item item, Room room){
+void Player::dropItem(const std::string itemDrop, Room& room) { // Take Item by reference, Room by reference
 
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        Item* item = *it;
+        if (item && item->getName() == itemDrop.c_str()) { // Compare item names
+            room.addItem(item);                              // Add to room
+            items.erase(it);                                // Remove from inventory
+            cprintf("You dropped the %s.\n", item->getName().c_str());
+            return; // Item dropped, exit function
+        }
+    }
+
+    cprintf("You don't have that item in your inventory.\n");
 }
 
 void Player::showInventory() { // Removed parameters and changed to class method

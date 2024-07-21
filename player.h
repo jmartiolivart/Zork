@@ -12,7 +12,7 @@ public:
     Player(std::vector<Item *> items);
 
     void getItem(Room room);
-    void dropItem(Item item, Room room);
+    void dropItem(std::string itemDrop, Room& room);
     void showInventory();
 
 private:

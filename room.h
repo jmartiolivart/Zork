@@ -19,6 +19,7 @@ public:
     std::vector<Exit*> getExits() const; // Get all exits from the room
     Item* getItem() const;
     void removeItem();
+    void addItem(Item* newItem);
 
 private:
     std::string name;
