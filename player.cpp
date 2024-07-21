@@ -59,3 +59,14 @@ void Player::showInventory() { // Removed parameters and changed to class method
         }
     }
 }
+
+bool Player::hasTheKey(){
+
+    for (Item* item : items) {
+        if (item->getName() == "Rusty key") {
+            return true;
+        }
+    }
+
+    return false;
+}

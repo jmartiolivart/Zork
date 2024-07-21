@@ -11,7 +11,7 @@ public:
     Exit(); // Default constructor declaration
     Exit(const Room& origin, const Room& destination);
     const Room& getDestination() const;
-    Room* getDestinationPtr() const; 
+    
 
 private:
     const Room& source;

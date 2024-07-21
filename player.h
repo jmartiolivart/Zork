@@ -14,6 +14,7 @@ public:
     void getItem(Room *room);
     void dropItem(const std::string& itemName, Room& room);
     void showInventory();
+    bool hasTheKey();
 
 private:
 

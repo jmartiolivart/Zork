@@ -23,7 +23,7 @@ void World::create(){
 
     //Creation of rooms
     std::vector<std::unique_ptr<Room>> rooms;
-    rooms.push_back(std::make_unique<Room>("Old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper", sword));
+    rooms.push_back(std::make_unique<Room>("Outside old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper"));
     // The ocre ball is and old and mosty sword, the paper tells something about how to kill the ogre
     rooms.push_back(std::make_unique<Room>("Mossy forest", "A big mystic forest with different trees it seems that there's a sound comming between the two trees of the left, also there's a rod in the ground in front of you", fishingRod));
     //The rod to fish in the lake and extract the key of the castle
@@ -33,15 +33,18 @@ void World::create(){
     //¿?
     rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door", treasure));
     //To kill the ogre take sword of castle / When winning the orgre treasure box appear the end
+    rooms.push_back(std::make_unique<Room>("Inside old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper", sword));
 
     //Creation of paths:
-    // 0 -> OLD CASTLE
+    // 0 -> OUTSIDE OLD CASTLE
     // 1 -> MOSSY FOREST
     // 2 -> THE WASTELANDS
     // 3 -> SHINNING LAKE
     // 4 -> LONELY HUT
+    // 5 -> INSIDE OLD CASTLE
     rooms[0]->addExit(new Exit(*rooms[0].get(), *rooms[1].get())); // Old castle to Mossy forest
     rooms[0]->addExit(new Exit(*rooms[0].get(), *rooms[4].get())); // Old castle to Lonely hut
+    rooms[0]->addExit(new Exit(*rooms[0].get(), *rooms[5].get())); // Old castle to inside old castle
     rooms[1]->addExit(new Exit(*rooms[1].get(), *rooms[0].get())); // Mossy forest to Old castle
     rooms[1]->addExit(new Exit(*rooms[1].get(), *rooms[2].get())); // Mossy forest to The wastelands
     rooms[2]->addExit(new Exit(*rooms[2].get(), *rooms[1].get())); // The wastelands to Mossy Forest
@@ -50,10 +53,12 @@ void World::create(){
     rooms[3]->addExit(new Exit(*rooms[3].get(), *rooms[4].get())); // Shinning lake to Lonely hut
     rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[3].get())); // Lonely hut to Shining lake
     rooms[4]->addExit(new Exit(*rooms[4].get(), *rooms[0].get())); // Lonely hut to Old castle
+    rooms[5]->addExit(new Exit(*rooms[5].get(), *rooms[0].get())); // Inside to outside old castle
 
     vector<Item*> startingItems;
     startingItems.push_back(new Item("Note"));
     Player player(startingItems);
+    doorCastle = false;
 
     cprintf("\n \n \n \n");
 
@@ -89,6 +94,9 @@ void World::create(){
             cprintf("Which item do you want to drop?\n");
             player.showInventory(); 
             drop(player);
+        }else if(userInput == "unlock"){
+            //HAS THE KEY and IT USED IT?
+            unlock(player);
         }else{
             cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
@@ -107,24 +115,38 @@ void World::look() {
 
 void World::move() {
     cprintf("Possible routes:\n");
-    for (Exit* exit : currentRoom->getExits()) {
-        const Room& route = exit->getDestination();
-        cprintf("- %s\n", route.getName().c_str());
+    for (const Exit* exit : currentRoom->getExits()) {
+        cprintf("- %s\n", exit->getDestination().getName().c_str());
     }
 
     std::string destinationName;
     cprintf("Where do you want to move? ");
     std::getline(std::cin, destinationName);
 
-    for (Exit* exit : currentRoom->getExits()) {
-        if (destinationName == exit->getDestination().getName()) {
-            currentRoom = const_cast<Room*>(&exit->getDestination()); // Remove constness and update the pointer
+    bool isCastleDestination = (destinationName == "Inside old castle");
+    bool canEnterCastle = isCastleDestination && doorCastle;
+
+    bool foundDestination = false; // Flag to track if the destination is valid
+
+    for (const Exit* exit : currentRoom->getExits()) {
+        const Room& route = exit->getDestination();
+        if (destinationName == route.getName() && (!isCastleDestination || canEnterCastle)) {
+            currentRoom = const_cast<Room*>(&route);
             look();
             return;
+        } else {
+            if (destinationName == route.getName()) { // Check if the name matches but door is locked
+                foundDestination = true;
+            }
         }
     }
-    cprintf("You can't go that way.\n");
+    if (foundDestination) {
+        cprintf("You can't go that way, the door is locked.\n");
+    } else {
+        cprintf("There's no path to that destination.\n");
+    }
 }
+
 
 void World::help(){
     cprintf("This are the commands availables:\n");
@@ -141,4 +163,17 @@ void World::drop(Player& player){
 
     player.dropItem(itemName, *currentRoom);
     
+}
+
+void World::unlock(Player& player) {
+    if (player.hasTheKey()) {
+        if (currentRoom->getName() == "Outside old castle") {
+            doorCastle = true;
+            cprintf("The castle door is now unlocked.\n");
+        } else {
+            cprintf("There isn't anything to unlock in this location.\n");
+        }
+    } else {
+        cprintf("A key is required.\n");
+    }
 }
