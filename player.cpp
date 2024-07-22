@@ -70,3 +70,42 @@ bool Player::hasTheKey(){
 
     return false;
 }
+
+
+void Player::read(const std::string& itemName) { 
+    
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        Item* item = *it;
+        if (item && item->getName() == itemName) {
+            if(item->getName() == "diary"){
+                cprintf("Journey ----- \nToday --------- \nFinally after months of travelling I have arrived to the region, let's see if the legends of the hidden treasure and the evil ogre are true or if it is all a fantasy of the common villagers.\n");
+            }else if(item->getName() == "ancient manuscrit"){
+
+            }else if(item->getName() == "Rock with inscription"){
+                cprintf("You try to read the rock, it seems a little enigmatic:\n \033[1m \" It fell *t t*e bo**om of the *ak* this is why is so shining take a fis******\"\033[0m \n...it seems that the rest of the message is illegible\n");
+            }else{
+                cprintf("This item can not be readed...");
+            }
+        }
+    }
+}
+
+void Player::fish(Room *room){
+
+    for (auto it = items.begin(); it != items.end(); ++it) {
+         Item* item = *it;
+        if (item && item->getName() == "Fishing rod") {
+            if(room->getName() == "Shining lake" && !fished){
+                Item* key = new Item("Rusty key");
+                items.push_back(key);
+                cprintf("You take the %s.\n", key->getName().c_str());
+                fished = false;
+                return;
+            }else{
+                cprintf("There's no water to fish in this place!");
+                return;
+            }
+        }
+    }
+    cprintf("You don't have anything to fish\n");
+}

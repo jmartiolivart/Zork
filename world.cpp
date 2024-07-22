@@ -16,8 +16,8 @@ void World::create(){
 
     //Creation of Items
     Item* sword = new Item("Sword");
-    Item* fishingRod = new Item("Fishing Rod");
-    Item* key = new Item("Rusty key");
+    Item* fishingRod = new Item("Fishing rod");
+    Item* rock = new Item("Rock with inscription");
     Item* treasure = new Item("Treasure chest");
 
 
@@ -29,7 +29,7 @@ void World::create(){
     //The rod to fish in the lake and extract the key of the castle
     rooms.push_back(std::make_unique<Room>("The wasteland", "In other times the so called wastelands had a very busy well-built road that went throught the forest and lead into the castle, now is an abandoned and vast route only used for outcasts and by bandits who want to avoid the lonely cabin"));
     //Starting point of the adventure!                   
-    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the castle before the war ended devastating all the region", key));
+    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the castle before the war ended devastating all the region", rock));
     //¿?
     rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door", treasure));
     //To kill the ogre take sword of castle / When winning the orgre treasure box appear the end
@@ -56,7 +56,7 @@ void World::create(){
     rooms[5]->addExit(new Exit(*rooms[5].get(), *rooms[0].get())); // Inside to outside old castle
 
     vector<Item*> startingItems;
-    startingItems.push_back(new Item("Note"));
+    startingItems.push_back(new Item("diary"));
     Player player(startingItems);
     doorCastle = false;
 
@@ -95,8 +95,13 @@ void World::create(){
             player.showInventory(); 
             drop(player);
         }else if(userInput == "unlock"){
-            //HAS THE KEY and IT USED IT?
             unlock(player);
+        }else if(userInput == "read"){
+            cprintf("Which item do you want to read?\n");
+            player.showInventory(); 
+            read(player);
+        }else if(userInput == "fish"){
+            player.fish(currentRoom);
         }else{
             cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
@@ -150,14 +155,17 @@ void World::move() {
 
 void World::help(){
     cprintf("This are the commands availables:\n");
-    cprintf("- look : it tells in which location are and a brief description\n");
-    cprintf("- move : it lets you choose between two locations that you can travel\n");
-    cprintf("- exit or quit : it will end the game\n");
-    cprintf("- inventory : you can poke in your bag to see what you are carrying\n");
+    cprintf("- look: it tells in which location are and a brief description\n");
+    cprintf("- move: it lets you choose between two locations that you can travel\n");
+    cprintf("- exit or quit: it will end the game\n");
+    cprintf("- inventory: you can poke in your bag to see what you are carrying\n");
     cprintf("- take: take it takes the object of the room you are located\n");
+    cprintf("- unlock: tries to use a key to unlock a door in the room you are located\n");
+    cprintf("- read: it lets you read an item you posses if it has something written");
 }
 
 void World::drop(Player& player){
+    
     std::string itemName;
     std::getline(std::cin, itemName);
 
@@ -176,4 +184,12 @@ void World::unlock(Player& player) {
     } else {
         cprintf("A key is required.\n");
     }
+}
+
+void World::read(Player& player) {
+
+    std::string itemName;
+    std::getline(std::cin, itemName);
+    player.read(itemName);
+
 }

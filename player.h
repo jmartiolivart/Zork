@@ -15,10 +15,13 @@ public:
     void dropItem(const std::string& itemName, Room& room);
     void showInventory();
     bool hasTheKey();
+    void read(const std::string& itemName);
+    void fish(Room *room);
 
 private:
 
     std::vector<Item*> items; // Store the items in the inventory of the player
+    bool fished = false;
 };
 
 #endif
