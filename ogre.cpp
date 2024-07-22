@@ -14,7 +14,7 @@ void Ogre::attack(Creature& target, int damage) {
     } else {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(1, 10); // 10% chance of charging up
+        std::uniform_int_distribution<> dis(1, 5); // 40% chance of charging up
 
         if (dis(gen) == 1) { // Charge up
             cprintf("The OGRE roars and begins to charge up for a powerful attack!\n");
