@@ -18,7 +18,7 @@ public:
     bool hasTheKey();
     void read(const std::string& itemName);
     void fish(Room *room);
-    void attack(Creature &target);
+    virtual void attack(Creature& target, int damage) override;
     void takeDamage(int damage);
     std::vector<Item*> getItems(const Player& player);
 

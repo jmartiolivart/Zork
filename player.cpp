@@ -4,7 +4,6 @@
 
 Player::Player(std::vector<Item*> items, int life) 
     : Creature(life, "Player"), items(std::move(items))  {
-    cprintf("Player created!");
 }
 
 //Consider one item for room max
@@ -111,12 +110,16 @@ void Player::fish(Room *room){
     cprintf("You don't have anything to fish\n");
 }
 
-void Player::attack(Creature& target){
-    
+void Player::attack(Creature& target, int damage) {
+    target.takeDamage(damage);
+
 }
 
 void Player::takeDamage(int damage){
-    
+     life -= damage; // Subtract damage from the creature's life
+    if (life <= 0) {
+       cprintf("Has has been defeated!");
+    }
 }
 
 std::vector<Item*>Player::getItems(const Player& player) {

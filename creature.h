@@ -14,7 +14,7 @@ public:
     int getLife() const;
     const std::string& getName() const;
 
-    virtual void attack(Creature& target) = 0;
+    virtual void attack(Creature &target, int damage);
     virtual void takeDamage(int damage);
     
 

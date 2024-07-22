@@ -155,14 +155,17 @@ void World::move() {
 
 void World::help(){
     cprintf("This are the commands availables:\n");
-    cprintf("- look: it tells in which location are and a brief description\n");
-    cprintf("- move: it lets you choose between two locations that you can travel\n");
-    cprintf("- exit or quit: it will end the game\n");
-    cprintf("- inventory: you can poke in your bag to see what you are carrying\n");
-    cprintf("- take: take it takes the object of the room you are located\n");
-    cprintf("- unlock: tries to use a key to unlock a door in the room you are located\n");
-    cprintf("- read: it lets you read an item you posses if it has something written");
+    cprintf("- \033[1mlook\033[0m: it tells in which location you are and a brief description\n");
+    cprintf("- \033[1mmove\033[0m: it lets you choose between locations that you can travel\n");
+    cprintf("- \033[1mexit\033[0m or \033[1mquit\033[0m: it will end the game\n");
+    cprintf("- \033[1minventory\033[0m: you can peek in your bag to see what you are carrying\n");
+    cprintf("- \033[1mtake\033[0m: takes the object of the room you are located in\n");
+    cprintf("- \033[1munlock\033[0m: tries to use a key to unlock a door in the room you are located in\n");
+    cprintf("- \033[1mread\033[0m: it lets you read an item you possess if it has something written\n");
+    cprintf("- \033[1mfish\033[0m: with a certain item, lets you try to catch a fish in the water\n");
+    cprintf("- \033[1mfight\033[0m: it will teleport you to the lonely hut, where greatness awaits but only when you are fully prepared\n");
 }
+
 
 void World::drop(Player& player){
     
@@ -200,9 +203,10 @@ void World::battleVsOgre(Player& player){
     std::string weapon;
     
     //DIALOG PREBATTLE
+    /*
     cprintf("Knowing you are probably going to die, you enter the lonely hut.\n");
     usleep(2000000);
-    typeWriterEffect("Finally, all the legends you heard become true. The room is full of treasures, even more than what the legends said.\n", 50000); 
+    typeWriterEffect("Finally, all the legends you heard become true. The room is full of treasures, even more that what the legends said.\n", 50000); 
     usleep(2000000);
     typeWriterEffect("You open your inventory and start loading up with all the treasures you can when suddenly...*BRUMMMMMM*\n", 50000);
     usleep(2000000);
@@ -211,13 +215,13 @@ void World::battleVsOgre(Player& player){
     cprintf("There is no escape, the only thing you can do is fight.\n");
     usleep(2000000);
     typeWriterEffect("The OGRE looks at you and starts running towards you roaring:\033[1mGRAAAAAAAAAAAAAAAAAAAAWWWRR!\033[0m\n", 50000);
-
+*/
     Ogre ogre;
     std::string userInput; 
     
     cprintf("Which weapon will you use?\n");
     player.showInventory();
-    weaponElection(player);
+    int damage = weaponElection(player);
 
     cprintf("The fight has started!\n");
 
@@ -229,8 +233,8 @@ void World::battleVsOgre(Player& player){
         std::getline(std::cin, userInput);
 
         if(userInput == "attack"){
-            cprintf("You attacked with %s\n", weapon.c_str());
-            player.attack(ogre);
+            cprintf("You attacked with %s\n", weapon);
+            player.attack(ogre, damage);
 
         }else if(userInput == "defense"){
             //player.defense();
@@ -238,7 +242,7 @@ void World::battleVsOgre(Player& player){
             cprintf("You can only \033[1mattack\033[0m or \033[1mdefense\033[0m! There's a big OGRE in front of you.");
         }
 
-        ogre.attack(player);
+        ogre.attack(player, 3);
     }
     
     
@@ -276,7 +280,7 @@ int World::weaponElection(Player& player) {
         }
 
         if (foundItem) {
-            weapon = itemName;
+            weapon = itemName.c_str();
             if (itemName == "sword") {
                 return 5;
             } else if (itemName == "fishing rod") {
