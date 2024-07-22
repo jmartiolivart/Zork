@@ -199,9 +199,7 @@ void World::read(Player& player) {
 
 
 void World::battleVsOgre(Player& player){
-
-    std::string weapon;
-    
+        
     //DIALOG PREBATTLE
     /*
     cprintf("Knowing you are probably going to die, you enter the lonely hut.\n");
@@ -233,7 +231,7 @@ void World::battleVsOgre(Player& player){
         std::getline(std::cin, userInput);
 
         if(userInput == "attack"){
-            cprintf("You attacked with %s\n", weapon);
+            cprintf("You attacked with %s\n", weapon.c_str());
             player.attack(ogre, damage);
 
         }else if(userInput == "defense"){
@@ -280,7 +278,7 @@ int World::weaponElection(Player& player) {
         }
 
         if (foundItem) {
-            weapon = itemName.c_str();
+            weapon = itemName; // Store the weapon name as a std::string
             if (itemName == "sword") {
                 return 5;
             } else if (itemName == "fishing rod") {
@@ -293,4 +291,3 @@ int World::weaponElection(Player& player) {
         }
     }
 }
-

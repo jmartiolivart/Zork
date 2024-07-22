@@ -3,14 +3,12 @@
 #include "creature.h"
 #include "item.h"
 #include "room.h"
-#include<vector>
+#include <vector>
 
 class Player: public Creature
 {
 public:
-
     Player(std::vector<Item *> items, int life = 40);
-    
 
     void getItem(Room *room);
     void dropItem(const std::string& itemName, Room& room);
@@ -19,16 +17,12 @@ public:
     void read(const std::string& itemName);
     void fish(Room *room);
     virtual void attack(Creature& target, int damage) override;
-    void takeDamage(int damage);
+    virtual void takeDamage(int damage) override;
     std::vector<Item*> getItems(const Player& player);
 
-
-
 private:
-
     std::vector<Item*> items; // Store the items in the inventory of the player
-    bool fished = false;
-    int life = 40;
+    bool fished = false; 
 };
 
 #endif

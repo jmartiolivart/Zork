@@ -2,11 +2,9 @@
 #include "item.h"
 #include <conio.h>
 
-Player::Player(std::vector<Item*> items, int life) 
-    : Creature(life, "Player"), items(std::move(items))  {
+Player::Player(std::vector<Item *> items, int life) : Creature(life, "Player"), items(items) {
 }
 
-//Consider one item for room max
 void Player::getItem(Room* room) {
     if (room == nullptr) { // Safety check: ensure valid room pointer
         cprintf("Error: You are not in a valid room.\n");
