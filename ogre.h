@@ -12,6 +12,7 @@ public:
     
 private:
     std::string name;
+    bool isCharging;
 };
 
 #endif

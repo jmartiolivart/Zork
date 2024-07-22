@@ -102,6 +102,7 @@ void World::create(){
             player.fish(currentRoom);
         }else if(userInput == "fight"){
             battleVsOgre(player);
+            break;
         }else{
             cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
@@ -199,7 +200,7 @@ void World::read(Player& player) {
 
 
 void World::battleVsOgre(Player& player){
-        
+
     //DIALOG PREBATTLE
     /*
     cprintf("Knowing you are probably going to die, you enter the lonely hut.\n");
@@ -226,21 +227,29 @@ void World::battleVsOgre(Player& player){
     while (true){
 
         showStats(player.getLife(), ogre.getLife());
-        cprintf("What do you want to do?");
+        cprintf("What do you want to do?\n");
 
         std::getline(std::cin, userInput);
 
         if(userInput == "attack"){
             cprintf("You attacked with %s\n", weapon.c_str());
             player.attack(ogre, damage);
+            ogre.attack(player, 3);
+
 
         }else if(userInput == "defense"){
-            //player.defense();
+            player.defend();
+            ogre.attack(player, 3);
+
         }else{
             cprintf("You can only \033[1mattack\033[0m or \033[1mdefense\033[0m! There's a big OGRE in front of you.");
         }
 
-        ogre.attack(player, 3);
+        if (player.isDefeated()) {
+            typeWriterEffect("The ogre with all his strength attacks you with his great hammer and blows your head back to the wasteland where you started.\n", 100000);
+            typeWriterEffect("\033[1mGAME OVER!\033[0m\n", 500000);
+            break;
+        }
     }
     
     
@@ -279,9 +288,9 @@ int World::weaponElection(Player& player) {
 
         if (foundItem) {
             weapon = itemName; // Store the weapon name as a std::string
-            if (itemName == "sword") {
+            if (itemName == "Sword") {
                 return 5;
-            } else if (itemName == "fishing rod") {
+            } else if (itemName == "Fishing rod" || itemName == "Rock with inscription") {
                 return 2;
             } else {
                 return 1;

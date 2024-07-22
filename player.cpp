@@ -113,13 +113,29 @@ void Player::attack(Creature& target, int damage) {
 
 }
 
-void Player::takeDamage(int damage){
-     life -= damage; // Subtract damage from the creature's life
+void Player::takeDamage(int damage) {
+    if (isDefending) {
+        damage /= 2;
+        cprintf("The player's defense halved the damage!\n");
+        isDefending = false;
+    }
+    life -= damage;
+    cprintf("%s takes %d damage!\n", name.c_str(), damage); 
+
     if (life <= 0) {
-       cprintf("Has has been defeated!");
+        cprintf("%s has been defeated!\n", name.c_str());
     }
 }
 
 std::vector<Item*>Player::getItems(const Player& player) {
     return player.items;  // Access items directly as player is a const reference
+}
+
+bool Player::isDefeated() const {
+    return defeated;
+}
+
+void Player::defend() {
+    isDefending = true; // Set defending state to true
+    cprintf("Player raises their shield in defense!");
 }

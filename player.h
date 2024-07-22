@@ -19,10 +19,15 @@ public:
     virtual void attack(Creature& target, int damage) override;
     virtual void takeDamage(int damage) override;
     std::vector<Item*> getItems(const Player& player);
+    void defend();
+    bool isDefeated() const;
 
 private:
     std::vector<Item*> items; // Store the items in the inventory of the player
     bool fished = false; 
+    bool defeated;
+    bool isDefending = false; 
+
 };
 
 #endif
