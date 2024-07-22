@@ -1,20 +1,20 @@
-#include <string>
-#include<list>
-
-
-#ifndef ENTITY_H  // Use a unique identifier based on the filename
+#ifndef ENTITY_H
 #define ENTITY_H
 
-class Entity
-{public:
+#include <string>
+#include <list>
 
+class Entity {
+public:
+    Entity(); // Corrected declaration
     enum type { creature, exit, room, item};
     std::string name;
     std::string description;
     std::list<Entity*> contains;
 
-    virtual void update(){};
+    virtual ~Entity() {}
 
+    virtual void update() {};
 };
 
-#endif  // ENTITY_H
+#endif

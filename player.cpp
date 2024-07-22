@@ -2,7 +2,8 @@
 #include "item.h"
 #include <conio.h>
 
-Player::Player(std::vector<Item*> items):items(items){
+Player::Player(std::vector<Item*> items, int life) 
+    : Creature(life, "Player"), items(std::move(items))  {
     cprintf("Player created!");
 }
 
@@ -108,4 +109,16 @@ void Player::fish(Room *room){
         }
     }
     cprintf("You don't have anything to fish\n");
+}
+
+void Player::attack(Creature& target){
+    
+}
+
+void Player::takeDamage(int damage){
+    
+}
+
+std::vector<Item*>Player::getItems(const Player& player) {
+    return player.items;  // Access items directly as player is a const reference
 }

@@ -9,6 +9,8 @@
 #include "item.h"    
 #include "exit.h"
 #include "player.h"    
+#include "ogre.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -57,7 +59,7 @@ void World::create(){
 
     vector<Item*> startingItems;
     startingItems.push_back(new Item("diary"));
-    Player player(startingItems);
+    Player player(startingItems, 40);
     doorCastle = false;
 
     cprintf("\n \n \n \n");
@@ -74,10 +76,6 @@ void World::create(){
     while (true)
     {
         std::getline(std::cin, userInput);
-        for (char &c : userInput) {
-            c = std::tolower(c);
-        }
-
         if (userInput == "look") {
             look();
         } else if(userInput == "move"){
@@ -102,6 +100,8 @@ void World::create(){
             read(player);
         }else if(userInput == "fish"){
             player.fish(currentRoom);
+        }else if(userInput == "fight"){
+            battleVsOgre(player);
         }else{
             cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
@@ -193,3 +193,100 @@ void World::read(Player& player) {
     player.read(itemName);
 
 }
+
+
+void World::battleVsOgre(Player& player){
+
+    std::string weapon;
+    
+    //DIALOG PREBATTLE
+    cprintf("Knowing you are probably going to die, you enter the lonely hut.\n");
+    usleep(2000000);
+    typeWriterEffect("Finally, all the legends you heard become true. The room is full of treasures, even more than what the legends said.\n", 50000); 
+    usleep(2000000);
+    typeWriterEffect("You open your inventory and start loading up with all the treasures you can when suddenly...*BRUMMMMMM*\n", 50000);
+    usleep(2000000);
+    typeWriterEffect("An ogre twice your size enters through the door through which you had previously entered.\n", 50000);
+    usleep(2000000);
+    cprintf("There is no escape, the only thing you can do is fight.\n");
+    usleep(2000000);
+    typeWriterEffect("The OGRE looks at you and starts running towards you roaring:\033[1mGRAAAAAAAAAAAAAAAAAAAAWWWRR!\033[0m\n", 50000);
+
+    Ogre ogre;
+    std::string userInput; 
+    
+    cprintf("Which weapon will you use?\n");
+    player.showInventory();
+    weaponElection(player);
+
+    cprintf("The fight has started!\n");
+
+    while (true){
+
+        showStats(player.getLife(), ogre.getLife());
+        cprintf("What do you want to do?");
+
+        std::getline(std::cin, userInput);
+
+        if(userInput == "attack"){
+            cprintf("You attacked with %s\n", weapon.c_str());
+            player.attack(ogre);
+
+        }else if(userInput == "defense"){
+            //player.defense();
+        }else{
+            cprintf("You can only \033[1mattack\033[0m or \033[1mdefense\033[0m! There's a big OGRE in front of you.");
+        }
+
+        ogre.attack(player);
+    }
+    
+    
+
+
+}
+
+//Dramatic writting efect
+void World::typeWriterEffect(const char *text, unsigned int delay) {
+  for (int i = 0; text[i] != '\0'; i++) {
+    putchar(text[i]);
+    fflush(stdout);  
+    usleep(delay);   
+  }
+}
+
+void World::showStats(int playerLife, int ogreLife){
+
+    //Player and ogre stats
+    cprintf("Player has: %d PV\nOgre has: %d PV\n", playerLife, ogreLife);
+}
+
+int World::weaponElection(Player& player) {
+    while (true) {
+        std::string itemName;
+        cprintf("Enter the name of the weapon you want to use: ");
+        std::getline(std::cin, itemName);
+        // Search for the item in the player's inventory
+        bool foundItem = false;
+        for (Item* item : player.getItems(player)) {
+            if (item && item->getName() == itemName) {
+                foundItem = true;
+                break; // Exit the loop once the item is found
+            }
+        }
+
+        if (foundItem) {
+            weapon = itemName;
+            if (itemName == "sword") {
+                return 5;
+            } else if (itemName == "fishing rod") {
+                return 2;
+            } else {
+                return 1;
+            }
+        } else {
+            cprintf("You don't have that item in your inventory. Please choose again.\n");
+        }
+    }
+}
+
