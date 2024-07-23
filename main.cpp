@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
      
-    cprintf("Welcome to Zork, adventurer! \n");
+    cprintf("\nWelcome to Zork, adventurer! \n");
     World world;
     world.create();
     return 0;

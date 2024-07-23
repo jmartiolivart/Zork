@@ -25,7 +25,6 @@ public:
 private:
     std::vector<Item*> items; // Store the items in the inventory of the player
     bool fished = false; 
-    bool defeated;
     bool isDefending = false; 
 
 };

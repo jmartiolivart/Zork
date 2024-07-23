@@ -25,17 +25,12 @@ void World::create()
 
     // Creation of rooms
     std::vector<std::unique_ptr<Room>> rooms;
-    rooms.push_back(std::make_unique<Room>("Outside old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper"));
-    // The ocre ball is and old and mosty sword, the paper tells something about how to kill the ogre
-    rooms.push_back(std::make_unique<Room>("Mossy forest", "A big mystic forest with different trees it seems that there's a sound comming between the two trees of the left, also there's a rod in the ground in front of you", fishingRod));
-    // The rod to fish in the lake and extract the key of the castle
+    rooms.push_back(std::make_unique<Room>("Outside old castle", "In the past, this castle was a reference point for travelers and many of the inhabitants of the region came day and night to ask the king for advice. Now it is just a ruin left after the battle between humans and ogres.\n"));
+    rooms.push_back(std::make_unique<Room>("Mossy forest", "A great mystical forest with trees of all kinds, where ogres once lived peacefully. There is a fishing rod on the ground in front of you.\n", fishingRod));
     rooms.push_back(std::make_unique<Room>("The wasteland", "In other times the so called wastelands had a very busy well-built road that went throught the forest and lead into the castle, now is an abandoned and vast route only used for outcasts and by bandits who want to avoid the lonely cabin"));
-    // Starting point of the adventure!
-    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the castle before the war ended devastating all the region", rock));
-    // ¿?
-    rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door", treasure));
-    // To kill the ogre take sword of castle / When winning the orgre treasure box appear the end
-    rooms.push_back(std::make_unique<Room>("Inside old castle", "This big castle is an ancient ruin of another era.\n On the left there is something resemblant ocre ball on the right in a table there\'s a paper", sword));
+    rooms.push_back(std::make_unique<Room>("Shining lake", "The beautiful lake that was the main source water of the people who lived in the castle and the ogres of the forest before the war ended devastating all the region", rock));
+    rooms.push_back(std::make_unique<Room>("Lonely hut", "It's a old and dilapidated hut, it seems peaceful at first but when you approach a sense of danger comes behind the door"));
+    rooms.push_back(std::make_unique<Room>("Inside old castle", "This big castle is an ancient ruin of another era.\n *The walls have inscriptions which refer to the ogre in the cabin giving warnings not to approach it.*\n", sword));
 
     // Creation of paths:
     //  0 -> OUTSIDE OLD CASTLE
@@ -62,8 +57,6 @@ void World::create()
     Player player(startingItems, 40);
     doorCastle = false;
 
-    cprintf("\n \n \n \n");
-
     // The game starts
     currentRoom = rooms[2].get(); // Starting in the wasteland
 
@@ -75,6 +68,7 @@ void World::create()
 
     while (true)
     {
+        cprintf("> ");
         std::getline(std::cin, userInput);
         if (userInput == "look")
         {
@@ -129,6 +123,8 @@ void World::create()
         {
             cprintf("I can't detect that command. Type help to see all commands availables.\n");
         }
+
+        cprintf("----------------------------------\n");
     }
 }
 
@@ -136,7 +132,7 @@ void World::look()
 {
     string currentLocation = currentRoom->getName();           // Use -> for pointer access
     string currentDescription = currentRoom->getDescription(); // Use -> for pointer access
-    cprintf("\033[1mCurrent Location: %s\033[0m \n%s\n", currentLocation.c_str(), currentDescription.c_str());
+    cprintf("\n\033[1mCurrent Location: %s\033[0m \n%s\n", currentLocation.c_str(), currentDescription.c_str());
 }
 
 void World::move()
@@ -250,7 +246,8 @@ void World::battleVsOgre(Player &player)
     cprintf("There is no escape, the only thing you can do is fight.\n");
     usleep(2000000);
     typeWriterEffect("The OGRE looks at you and starts running towards you roaring:\033[1mGRAAAAAAAAAAAAAAAAAAAAWWWRR!\033[0m\n", 50000);
-
+    cprintf("-------------------\n");
+    
     Ogre ogre;
     std::string userInput;
 
@@ -258,7 +255,7 @@ void World::battleVsOgre(Player &player)
     player.showInventory();
     int damage = weaponElection(player);
 
-    cprintf("The fight has started!\n");
+    cprintf("\033[1;31mThe fight has started!\033[0m\n");
     cprintf("-------------------\n");
 
     while (true)
@@ -288,7 +285,14 @@ void World::battleVsOgre(Player &player)
         if (player.isDefeated())
         {
             typeWriterEffect("The ogre with all his strength attacks you with his great hammer and blows your head back to the wasteland where you started.\n", 100000);
-            typeWriterEffect("\033[1mGAME OVER!\033[0m\n", 500000);
+            typeWriterEffect("\033[1;31mGAME OVER!\033[0m\n", 500000);
+            break;
+        }
+
+        if  (ogre.isDefeated()){
+            typeWriterEffect("The ogre is about to strike with all the remaning strength his got, but you attack faster knocking him out.\n", 100000);
+            typeWriterEffect("Finally your journey is over, you are happy it's finally over you obtain the treasure, and return to your village. Filling a little empty but ambitious for finding new goals.\n", 100000);
+            typeWriterEffect("\033[1;32mCONGRATULATIONS FOR KILLING THE OGRE! YOU WIN!!!\033[0m\n", 100000);
             break;
         }
         cprintf("-------------------\n");

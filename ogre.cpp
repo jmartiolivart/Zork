@@ -31,3 +31,7 @@ void Ogre::takeDamage(int damage){
        cprintf("Has has been defeated!");
     }
 }
+
+bool Ogre::isDefeated() const {
+    return life <= 0;
+}
