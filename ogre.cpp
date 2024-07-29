@@ -2,6 +2,9 @@
 #include "creature.h"
 #include <conio.h>
 #include <random>
+#include <iostream>
+
+using namespace std;
 
 Ogre::Ogre(const std::string& name, int life) : Creature(life, name), isCharging(false) {}
 
@@ -9,7 +12,7 @@ Ogre::Ogre(const std::string& name, int life) : Creature(life, name), isCharging
 void Ogre::attack(Creature& target, int damage) {
    if (isCharging) {
         target.takeDamage(damage * 3); // Triple damage on charged attack
-        cprintf("The OGRE unleashes a devastating blow!\n");
+        cout << "The OGRE unleashes a devastating blow!\n";
         isCharging = false; // Reset charging state after the attack
     } else {
         std::random_device rd;
@@ -17,7 +20,7 @@ void Ogre::attack(Creature& target, int damage) {
         std::uniform_int_distribution<> dis(1, 5); // 40% chance of charging up
 
         if (dis(gen) == 1) { // Charge up
-            cprintf("The OGRE roars and begins to charge up for a powerful attack!\n");
+            cout << "The OGRE roars and begins to charge up for a powerful attack!\n";
             isCharging = true;
         } else {
             target.takeDamage(damage); // Normal damage
@@ -28,7 +31,7 @@ void Ogre::attack(Creature& target, int damage) {
 void Ogre::takeDamage(int damage){
     life -= damage; // Subtract damage from the creature's life
     if (life <= 0) {
-       cprintf("Has has been defeated!");
+       cout << "Has has been defeated!";
     }
 }
 

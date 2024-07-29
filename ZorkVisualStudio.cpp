@@ -4,9 +4,9 @@
 
 using namespace std;
 
-int main(){
-     
-    cprintf("\nWelcome to Zork, adventurer! \n");
+int main() {
+
+    cout << "\nWelcome to Zork, adventurer! \n";
     World world;
     world.create();
     return 0;

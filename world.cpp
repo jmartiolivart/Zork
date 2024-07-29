@@ -10,7 +10,7 @@
 #include "exit.h"
 #include "player.h"
 #include "ogre.h"
-#include <unistd.h>
+#include <windows.h>
 
 using namespace std;
 
@@ -68,7 +68,7 @@ void World::create()
 
     while (true)
     {
-        cprintf("> ");
+        cout << "> ";
         std::getline(std::cin, userInput);
         if (userInput == "look")
         {
@@ -96,7 +96,7 @@ void World::create()
         }
         else if (userInput == "drop")
         {
-            cprintf("Which item do you want to drop?\n");
+            cout << "Which item do you want to drop?\n";
             player.showInventory();
             drop(player);
         }
@@ -106,7 +106,7 @@ void World::create()
         }
         else if (userInput == "read")
         {
-            cprintf("Which item do you want to read?\n");
+            cout << "Which item do you want to read?\n";
             player.showInventory();
             read(player);
         }
@@ -121,10 +121,10 @@ void World::create()
         }
         else
         {
-            cprintf("I can't detect that command. Type help to see all commands availables.\n");
+            cout << "I can't detect that command. Type help to see all commands availables.\n";
         }
 
-        cprintf("----------------------------------\n");
+        cout << "----------------------------------\n";
     }
 }
 
@@ -132,19 +132,19 @@ void World::look()
 {
     string currentLocation = currentRoom->getName();           // Use -> for pointer access
     string currentDescription = currentRoom->getDescription(); // Use -> for pointer access
-    cprintf("\n\033[1mCurrent Location: %s\033[0m \n%s\n", currentLocation.c_str(), currentDescription.c_str());
+    cout << "\n\033[1mCurrent Location: " << currentLocation << "\033[0m \n" << currentDescription << "\n";
 }
 
 void World::move()
 {
-    cprintf("Possible routes:\n");
+    cout << "Possible routes:\n";
     for (const Exit *exit : currentRoom->getExits())
     {
-        cprintf("- %s\n", exit->getDestination().getName().c_str());
+        cout << "- " << exit->getDestination().getName() << "\n";
     }
 
     std::string destinationName;
-    cprintf("Where do you want to move? ");
+    cout << "Where do you want to move? ";
     std::getline(std::cin, destinationName);
 
     bool isCastleDestination = (destinationName == "Inside old castle");
@@ -171,26 +171,26 @@ void World::move()
     }
     if (foundDestination)
     {
-        cprintf("You can't go that way, the door is locked.\n");
+        cout << "You can't go that way, the door is locked.\n";
     }
     else
     {
-        cprintf("There's no path to that destination.\n");
+        cout << "There's no path to that destination.\n";
     }
 }
 
 void World::help()
 {
-    cprintf("This are the commands availables:\n");
-    cprintf("- \033[1mlook\033[0m: it tells in which location you are and a brief description\n");
-    cprintf("- \033[1mmove\033[0m: it lets you choose between locations that you can travel\n");
-    cprintf("- \033[1mexit\033[0m or \033[1mquit\033[0m: it will end the game\n");
-    cprintf("- \033[1minventory\033[0m: you can peek in your bag to see what you are carrying\n");
-    cprintf("- \033[1mtake\033[0m: takes the object of the room you are located in\n");
-    cprintf("- \033[1munlock\033[0m: tries to use a key to unlock a door in the room you are located in\n");
-    cprintf("- \033[1mread\033[0m: it lets you read an item you possess if it has something written\n");
-    cprintf("- \033[1mfish\033[0m: with a certain item, lets you try to catch a fish in the water\n");
-    cprintf("- \033[1mfight\033[0m: it will teleport you to the lonely hut, where greatness awaits but only when you are fully prepared\n");
+    cout << "This are the commands availables:\n";
+    cout << "- \033[1mlook\033[0m: it tells in which location you are and a brief description\n";
+    cout << "- \033[1mmove\033[0m: it lets you choose between locations that you can travel\n";
+    cout << "- \033[1mexit\033[0m or \033[1mquit\033[0m: it will end the game\n";
+    cout << "- \033[1minventory\033[0m: you can peek in your bag to see what you are carrying\n";
+    cout << "- \033[1mtake\033[0m: takes the object of the room you are located in\n";
+    cout << "- \033[1munlock\033[0m: tries to use a key to unlock a door in the room you are located in\n";
+    cout << "- \033[1mread\033[0m: it lets you read an item you possess if it has something written\n";
+    cout << "- \033[1mfish\033[0m: with a certain item, lets you try to catch a fish in the water\n";
+    cout << "- \033[1mfight\033[0m: it will teleport you to the lonely hut, where greatness awaits but only when you are fully prepared\n";
 }
 
 void World::drop(Player &player)
@@ -209,16 +209,16 @@ void World::unlock(Player &player)
         if (currentRoom->getName() == "Outside old castle")
         {
             doorCastle = true;
-            cprintf("The castle door is now unlocked.\n");
+            cout << "The castle door is now unlocked.\n";
         }
         else
         {
-            cprintf("There isn't anything to unlock in this location.\n");
+            cout << "There isn't anything to unlock in this location.\n";
         }
     }
     else
     {
-        cprintf("A key is required.\n");
+        cout << "A key is required.\n";
     }
 }
 
@@ -235,67 +235,62 @@ void World::battleVsOgre(Player &player)
 
     // DIALOG PREBATTLE
 
-    cprintf("Knowing you are probably going to die, you enter the lonely hut.\n");
-    usleep(2000000);
-    typeWriterEffect("Finally, all the legends you heard become true. The room is full of treasures, even more that what the legends said.\n", 50000);
-    usleep(2000000);
-    typeWriterEffect("You open your inventory and start loading up with all the treasures you can when suddenly...*BRUMMMMMM*\n", 50000);
-    usleep(2000000);
-    typeWriterEffect("An ogre twice your size enters through the door which you had previously entered.\n", 50000);
-    usleep(2000000);
-    cprintf("There is no escape, the only thing you can do is fight.\n");
-    usleep(2000000);
-    typeWriterEffect("The OGRE looks at you and starts running towards you roaring:\033[1mGRAAAAAAAAAAAAAAAAAAAAWWWRR!\033[0m\n", 50000);
-    cprintf("-------------------\n");
-    
+    cout << "Knowing you are probably going to die, you enter the lonely hut.\n";
+    Sleep(2000);
+    typeWriterEffect("Finally, all the legends you heard become true. The room is full of treasures, even more that what the legends said.\n", 50);
+    Sleep(2000);
+    typeWriterEffect("You open your inventory and start loading up with all the treasures you can when suddenly...*BRUMMMMMM*\n", 50);
+    Sleep(2000);
+    typeWriterEffect("An ogre twice your size enters through the door which you had previously entered.\n", 50);
+    Sleep(2000);
+    cout << "There is no escape, the only thing you can do is fight.\n";
+    Sleep(2000);
+    typeWriterEffect("The OGRE looks at you and starts running towards you roaring:\033[1mGRAAAAAAAAAAAAAAAAAAAAWWWRR!\033[0m\n", 50);
+    cout << "-------------------\n";
+
     Ogre ogre;
     std::string userInput;
 
-    cprintf("Which weapon will you use?\n");
+    cout << "Which weapon will you use?\n";
     player.showInventory();
     int damage = weaponElection(player);
 
-    cprintf("\033[1;31mThe fight has started!\033[0m\n");
-    cprintf("-------------------\n");
+    cout << "\033[1;31mThe fight has started!\033[0m\n";
+    cout << "-------------------\n";
 
-    while (true)
-    {
-
+    while (true) {
         showStats(player.getLife(), ogre.getLife());
-        cprintf("\nWhat do you want to do? (attack or defense)\n");
+        cout << "\nWhat do you want to do? (attack or defense)\n"; // Use cout instead of cprintf
 
         std::getline(std::cin, userInput);
 
-        if (userInput == "attack")
-        {
-            cprintf("You attacked with %s\n", weapon.c_str());
+        if (userInput == "attack") {
+            cout << "You attacked with " << weapon << "\n"; // No need for c_str() anymore
             player.attack(ogre, damage);
             ogre.attack(player, 3);
         }
-        else if (userInput == "defense")
-        {
+        else if (userInput == "defense") {
             player.defend();
             ogre.attack(player, 3);
         }
-        else
-        {
-            cprintf("You can only \033[1mattack\033[0m or \033[1mdefense\033[0m! There's a big OGRE in front of you.\n");
+        else {
+            cout << "You can only \033[1mattack\033[0m or \033[1mdefense\033[0m! There's a big OGRE in front of you.\n";
         }
 
         if (player.isDefeated())
         {
-            typeWriterEffect("The ogre with all his strength attacks you with his great hammer and blows your head back to the wasteland where you started.\n", 100000);
-            typeWriterEffect("\033[1;31mGAME OVER!\033[0m\n", 500000);
+            typeWriterEffect("The ogre with all his strength attacks you with his great hammer and blows your head back to the wasteland where you started.\n", 100);
+            typeWriterEffect("\033[1;31mGAME OVER!\033[0m\n", 500);
             break;
         }
 
         if  (ogre.isDefeated()){
-            typeWriterEffect("The ogre is about to strike with all the remaning strength his got, but you attack faster knocking him out.\n", 100000);
-            typeWriterEffect("Finally your journey is over, you are happy it's finally over you obtain the treasure, and return to your village. Filling a little empty but ambitious for finding new goals.\n", 100000);
-            typeWriterEffect("\033[1;32mCONGRATULATIONS FOR KILLING THE OGRE! YOU WIN!!!\033[0m\n", 100000);
+            typeWriterEffect("The ogre is about to strike with all the remaning strength his got, but you attack faster knocking him out.\n", 100);
+            typeWriterEffect("Finally your journey is over, you are happy it's finally over you obtain the treasure, and return to your village. Filling a little empty but ambitious for finding new goals.\n", 100);
+            typeWriterEffect("\033[1;32mCONGRATULATIONS FOR KILLING THE OGRE! YOU WIN!!!\033[0m\n", 100);
             break;
         }
-        cprintf("-------------------\n");
+        cout << "-------------------\n";
     }
 }
 
@@ -306,7 +301,7 @@ void World::typeWriterEffect(const char *text, unsigned int delay)
     {
         putchar(text[i]);
         fflush(stdout);
-        usleep(delay);
+        Sleep(delay);
     }
 }
 
@@ -314,17 +309,14 @@ void World::showStats(int playerLife, int ogreLife)
 {
 
     // Player and ogre stats
-    if (playerLife > ogreLife)
-    {
-        cprintf("You're winning!\n- You: %d HP\n- Ogre: %d HP\n", playerLife, ogreLife);
+    if (playerLife > ogreLife) {
+        cout << "You're winning!\n- You: " << playerLife << " HP\n- Ogre: " << ogreLife << " HP\n";
     }
-    else if (playerLife < ogreLife)
-    {
-        cprintf("Danger!\n- You: %d HP\n- Ogre: %d HP", playerLife, ogreLife);
+    else if (playerLife < ogreLife) {
+        cout << "Danger!\n- You: " << playerLife << " HP\n- Ogre: " << ogreLife << " HP\n";
     }
-    else
-    {
-        cprintf("Neck and neck! You: %d HP\n- Ogre: %d HP", playerLife, ogreLife);
+    else {
+        cout << "Neck and neck!\n- You: " << playerLife << " HP\n- Ogre: " << ogreLife << " HP\n";
     }
 }
 
@@ -333,7 +325,7 @@ int World::weaponElection(Player &player)
     while (true)
     {
         std::string itemName;
-        cprintf("Enter the name of the weapon you want to use: ");
+        cout << "Enter the name of the weapon you want to use: ";
         std::getline(std::cin, itemName);
         // Search for the item in the player's inventory
         bool foundItem = false;
@@ -364,7 +356,7 @@ int World::weaponElection(Player &player)
         }
         else
         {
-            cprintf("You don't have that item in your inventory. Please choose again.\n");
+            cout << "You don't have that item in your inventory. Please choose again.\n";
         }
     }
 }
