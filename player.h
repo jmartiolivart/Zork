@@ -18,7 +18,7 @@ public:
     void fish(Room *room);
     virtual void attack(Creature& target, int damage) override;
     virtual void takeDamage(int damage) override;
-    std::vector<Item*> getItems(const Player& player);
+    std::vector<Item*> getItems();
     void defend();
     bool isDefeated() const;
 

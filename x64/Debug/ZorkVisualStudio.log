@@ -1,4 +1,8 @@
-﻿  player.cpp
+﻿  ZorkVisualStudio.cpp
+  exit.cpp
+  item.cpp
+  player.cpp
+  room.cpp
   world.cpp
   Generando código...
   ZorkVisualStudio.vcxproj -> C:\Users\jmart\source\repos\ZorkVisualStudio\x64\Debug\ZorkVisualStudio.exe

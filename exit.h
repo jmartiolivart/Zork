@@ -2,10 +2,10 @@
 #define EXIT_H
 
 #include "room.h"
-#include "entity.h"
 
 class Room; // Forward declaration of Room
-class Exit : public Entity {
+class Exit
+{
 
 public:
     Exit(); // Default constructor declaration

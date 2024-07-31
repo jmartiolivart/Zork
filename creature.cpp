@@ -1,11 +1,10 @@
 #include "creature.h"
-#include "entity.h" 
 #include <conio.h>
 #include <iostream>
 
 using namespace std;
 
-Creature::Creature(int life, const std::string& name) : Entity(), life(life), name(name) {
+Creature::Creature(int life, const std::string& name) : life(life), name(name) {
     
 }
 

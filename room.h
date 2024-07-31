@@ -3,12 +3,11 @@
 
 #include <vector>
 #include <string>
-#include "entity.h"
 #include "item.h" // Add this line to include the Item class definition
 
 class Exit; // Forward declaration of Exit
 
-class Room: public Entity
+class Room
 {
 public:
     Room(const char* name, const char* description, Item* item = nullptr);

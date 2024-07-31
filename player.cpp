@@ -179,9 +179,9 @@ void Player::takeDamage(int damage)
     }
 }
 
-std::vector<Item *> Player::getItems(const Player &player)
+std::vector<Item *> Player::getItems()
 {
-    return player.items; // Access items directly as player is a const reference
+    return items;
 }
 
 bool Player::isDefeated() const

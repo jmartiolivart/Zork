@@ -329,7 +329,7 @@ int World::weaponElection(Player &player)
         std::getline(std::cin, itemName);
         // Search for the item in the player's inventory
         bool foundItem = false;
-        for (Item *item : player.getItems(player))
+        for (Item *item : player.getItems())
         {
             if (item && item->getName() == itemName)
             {

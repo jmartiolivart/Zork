@@ -2,9 +2,8 @@
 #define CREATURE_H
 
 #include <string>
-#include "entity.h"
 
-class Creature : public Entity
+class Creature
 {
 public:
     
